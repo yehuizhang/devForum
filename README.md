@@ -7,6 +7,7 @@
   * express - web framework for node
   * config - organizes configurations
   * mongoose - supports MongoDB
+  * nodemon - helps node based app by automatically restarting when file changes
 
 ## Build
 
