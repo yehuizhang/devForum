@@ -23,5 +23,7 @@ module.exports = {
         "no-console": "off",
         "no-plusplus": 0,
         "no-param-reassign": 0,
+        "no-multi-assign": 0,
+        "consistent-return": 0
     }
 };
