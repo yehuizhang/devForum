@@ -102,4 +102,6 @@ const profileSchema = new mongoose.Schema(schemaDef);
 
 module.exports = {
   Profile: mongoose.model('Profile', profileSchema),
+  profileFieldNamesNonReq: profileFieldsNonReq,
+  profileFieldSocial: socialNetsNames,
 };
