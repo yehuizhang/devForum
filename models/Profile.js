@@ -1,18 +1,9 @@
 const mongoose = require('mongoose');
 
-const profileSchema = new mongoose.Schema({
+const schemaDef = {
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-  },
-  company: {
-    type: String,
-  },
-  website: {
-    type: String,
-  },
-  location: {
-    type: String,
   },
   status: {
     type: String,
@@ -21,12 +12,6 @@ const profileSchema = new mongoose.Schema({
   skills: {
     type: [String],
     required: true,
-  },
-  bio: {
-    type: String,
-  },
-  githubUsername: {
-    type: String,
   },
   experience: [
     {
@@ -40,6 +25,7 @@ const profileSchema = new mongoose.Schema({
       },
       location: {
         type: String,
+        required: true,
       },
       from: {
         type: Date,
@@ -90,30 +76,30 @@ const profileSchema = new mongoose.Schema({
       },
     },
   ],
-  social: {
-    youtube: {
-      type: String,
-    },
-    twitter: {
-      type: String,
-    },
-    facebook: {
-      type: String,
-    },
-    linkedin: {
-      type: String,
-    },
-    wechat: {
-      type: String,
-    },
-    weibo: {
-      type: String,
-    },
-  },
   date: {
     type: Date,
     default: Date.now,
   },
+};
+
+const profileFieldsNonReq = ['company', 'website', 'location', 'bio', 'githubUsername'];
+profileFieldsNonReq.forEach((field) => {
+  schemaDef[field] = {
+    type: String,
+  };
 });
 
-module.exports = mongoose.model('Profile', profileSchema);
+const socialNetsNames = ['youtube', 'twitter', 'facebook', 'linkedin', 'wechat', 'weibo'];
+const socialNetsField = {};
+socialNetsNames.forEach((field) => {
+  socialNetsField[field] = {
+    type: String,
+  };
+});
+schemaDef.social = socialNetsField;
+
+const profileSchema = new mongoose.Schema(schemaDef);
+
+module.exports = {
+  Profile: mongoose.model('Profile', profileSchema),
+};

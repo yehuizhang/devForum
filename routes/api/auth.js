@@ -17,7 +17,7 @@ router.get('/', auth, async (req, res) => {
     console.log(User);
     const user = await User.findById(req.user.id).select('-password');
     if (!user) {
-      return res.status(400).json({ msg: 'Invalid token. User does not exist.'});
+      return res.status(400).json({ msg: 'Invalid token. User does not exist.' });
     }
     return res.json(user);
   } catch (error) {
