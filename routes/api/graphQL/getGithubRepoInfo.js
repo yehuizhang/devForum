@@ -1,9 +1,5 @@
 const config = require('config');
 const { GraphQLClient } = require('graphql-request');
-/* Document
-https://www.npmjs.com/package/graphql-request
-https://developer.github.com/v4/explorer/
-*/
 
 const client = new GraphQLClient(config.get('githubGraphQLEndpoint'), {
   headers: {
