@@ -1,6 +1,9 @@
 const config = require('config');
 const { GraphQLClient } = require('graphql-request');
-// Document https://www.npmjs.com/package/graphql-request
+/* Document
+https://www.npmjs.com/package/graphql-request
+https://developer.github.com/v4/explorer/
+*/
 
 const client = new GraphQLClient(config.get('githubGraphQLEndpoint'), {
   headers: {
@@ -8,11 +11,13 @@ const client = new GraphQLClient(config.get('githubGraphQLEndpoint'), {
   },
 });
 
-const getRepoInfo = (username) => {
-  const query = `{
-    user(login: "${username}") {
-      repositories(orderBy: {field: CREATED_AT, direction: ASC}, first: 5) {
+const getRepoInfo = (username, endCursor) => {
+  const query = `
+  query ($username: String!, $orderfield: RepositoryOrderField!, $direction: OrderDirection!, $pagination: Int, $endCursor: String) {
+    user(login: $username) {
+      repositories(orderBy: {field: $orderfield, direction: $direction}, first: $pagination, after: $endCursor) {
         nodes {
+          id
           createdAt
           id
           name
@@ -21,10 +26,24 @@ const getRepoInfo = (username) => {
           }
           url
         }
+        pageInfo {
+          startCursor
+          endCursor
+          hasNextPage
+          hasPreviousPage
+        }
       }
     }
   }`;
-  return client.request(query);
+
+  const variables = {
+    username,
+    orderfield: 'CREATED_AT',
+    direction: 'ASC',
+    pagination: 5,
+    endCursor,
+  };
+  return client.request(query, variables);
 };
 
 module.exports = getRepoInfo;

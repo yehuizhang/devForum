@@ -260,12 +260,26 @@ router.get('/github/:username', async (req, res) => {
 // @access  Public
 router.get('/github-graphql/:username', async (req, res) => {
   try {
-    const repoData = await getRepoInfo(req.params.username);
+    const repoData = await getRepoInfo(req.params.username, null);
     res.json(repoData);
   } catch (error) {
-    if (error.response.status === 404) {
-      console.err(error.response.errors);
-      console.err(error.response.data);
+    if (error.response.errors && error.response.errors[0].type === 'NOT_FOUND') {
+      return res.status(404).json({ msg: 'Invalid github username' });
+    }
+    console.error(error.message);
+    return res.status(500).send(config.get('msg-ServerError'));
+  }
+});
+
+// @route   GET api/profile/github-graphql/:username-:cursor
+// @desc    Get user repos after the cursor
+// @access  Public
+router.get('/github-graphql/:username/:cursor', async (req, res) => {
+  try {
+    const repoData = await getRepoInfo(req.params.username, req.params.cursor);
+    res.json(repoData);
+  } catch (error) {
+    if (error.response.errors.type === 'NOT_FOUND') {
       return res.status(404).json({ msg: 'Invalid github username' });
     }
     console.error(error.message);
