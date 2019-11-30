@@ -5,6 +5,7 @@ const { check, validationResult } = require('express-validator');
 const auth = require('../../middleware/auth');
 const { Profile, profileFieldNamesNonReq, profileFieldSocial } = require('../../models/Profile');
 const User = require('../../models/User');
+const getRepoInfo = require('./graphQL/getGithubRepoInfo');
 
 const router = express.Router();
 
@@ -232,13 +233,19 @@ router.get('/github/:username', async (req, res) => {
   try {
     const options = {
       url: `https://api.github.com/users/${req.params.username}/repos?per_page=5&
-      sort=created:asc&client_id=${config.get('githubClientID')}&
+      type=all&sort=created&direction=asc&client_id=${config.get('githubClientID')}&
       client_secret=${config.get('githubClientSecret')}`,
       method: 'get',
       headers: { 'user-agent': 'node.js' },
     };
     const githubResponse = await axios(options);
-    res.json(githubResponse.data);
+    const repoData = githubResponse.data;
+    res.json(repoData.map((repo) => ({
+      name: repo.name,
+      createdAt: repo.created_at,
+      id: repo.node_id,
+      url: repo.html_url,
+    })));
   } catch (error) {
     if (error.response.status === 404) {
       return res.status(404).json({ msg: 'Invalid github username' });
@@ -248,6 +255,22 @@ router.get('/github/:username', async (req, res) => {
   }
 });
 
-// TODO: make another GET request to interact with Github API v4 graphQL
+// @route   GET api/profile/github-graphql/:username
+// @desc    Get user repos from Github through graphQL API
+// @access  Public
+router.get('/github-graphql/:username', async (req, res) => {
+  try {
+    const repoData = await getRepoInfo(req.params.username);
+    res.json(repoData);
+  } catch (error) {
+    if (error.response.status === 404) {
+      console.err(error.response.errors);
+      console.err(error.response.data);
+      return res.status(404).json({ msg: 'Invalid github username' });
+    }
+    console.error(error.message);
+    return res.status(500).send(config.get('msg-ServerError'));
+  }
+});
 
 module.exports = router;
