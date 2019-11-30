@@ -1,5 +1,6 @@
 const express = require('express');
 const config = require('config');
+const axios = require('axios');
 const { check, validationResult } = require('express-validator');
 const auth = require('../../middleware/auth');
 const { Profile, profileFieldNamesNonReq, profileFieldSocial } = require('../../models/Profile');
@@ -224,5 +225,29 @@ router.delete('/education/:edu_id', auth, async (req, res) => {
   }
 });
 
+// @route   GET api/profile/github/:username
+// @desc    Get user repos from Github
+// @access  Public
+router.get('/github/:username', async (req, res) => {
+  try {
+    const options = {
+      url: `https://api.github.com/users/${req.params.username}/repos?per_page=5&
+      sort=created:asc&client_id=${config.get('githubClientID')}&
+      client_secret=${config.get('githubClientSecret')}`,
+      method: 'get',
+      headers: { 'user-agent': 'node.js' },
+    };
+    const githubResponse = await axios(options);
+    res.json(githubResponse.data);
+  } catch (error) {
+    if (error.response.status === 404) {
+      return res.status(404).json({ msg: 'Invalid github username' });
+    }
+    console.error(error.message);
+    return res.status(500).send(config.get('msg-ServerError'));
+  }
+});
+
+// TODO: make another GET request to interact with Github API v4 graphQL
 
 module.exports = router;
