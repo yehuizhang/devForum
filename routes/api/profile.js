@@ -5,7 +5,7 @@ const { check, validationResult } = require('express-validator');
 const auth = require('../../middleware/auth');
 const { Profile, profileFieldNamesNonReq, profileFieldSocial } = require('../../models/Profile');
 const User = require('../../models/User');
-const getRepoInfo = require('./graphQL/getGithubRepoInfo');
+const getRepoInfo = require('./helper/getGithubRepoInfo');
 
 const router = express.Router();
 
