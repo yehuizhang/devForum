@@ -82,16 +82,29 @@ const schemaDef = {
   },
 };
 
-const profileFieldsNonReq = ['company', 'website', 'location', 'bio', 'githubUsername'];
-profileFieldsNonReq.forEach((field) => {
+const profileFieldsNonReq = [
+  'company',
+  'website',
+  'location',
+  'bio',
+  'githubUsername',
+];
+profileFieldsNonReq.forEach(field => {
   schemaDef[field] = {
     type: String,
   };
 });
 
-const socialNetsNames = ['youtube', 'twitter', 'facebook', 'linkedin', 'wechat', 'weibo'];
+const socialNetsNames = [
+  'youtube',
+  'twitter',
+  'facebook',
+  'linkedin',
+  'wechat',
+  'weibo',
+];
 const socialNetsField = {};
-socialNetsNames.forEach((field) => {
+socialNetsNames.forEach(field => {
   socialNetsField[field] = {
     type: String,
   };

@@ -6,7 +6,7 @@ const auth = require('../../middleware/auth');
 const {
   Profile,
   profileFieldNamesNonReq,
-  profileFieldSocial
+  profileFieldSocial,
 } = require('../../models/Profile');
 const User = require('../../models/User');
 const getRepoInfo = require('./helper/getGithubRepoInfo');
@@ -19,7 +19,7 @@ const router = express.Router();
 router.get('/me', auth, async (req, res) => {
   try {
     const profile = await Profile.findOne({
-      user: req.user.id
+      user: req.user.id,
     }).populate('user', ['name', 'avatar']);
 
     if (!profile) {
@@ -45,8 +45,8 @@ router.post(
         .isEmpty(),
       check('skills', 'Skill is required')
         .not()
-        .isEmpty()
-    ]
+        .isEmpty(),
+    ],
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -114,7 +114,7 @@ router.get('/', async (req, res) => {
 router.get('/user/:user_id', async (req, res) => {
   try {
     const profile = await Profile.findOne({
-      user: req.params.user_id
+      user: req.params.user_id,
     }).populate('user', ['name', 'avatar']);
     if (!profile) {
       return res.status(400).json({ msg: 'No profile found for the user' });
@@ -167,8 +167,8 @@ router.put(
         .isEmpty(),
       check('from', 'From date is required')
         .not()
-        .isEmpty()
-    ]
+        .isEmpty(),
+    ],
   ],
   async (req, res) => {
     const err = validationResult(req);
@@ -183,7 +183,7 @@ router.put(
       from,
       to,
       current,
-      description
+      description,
     } = req.body;
 
     const newExp = {
@@ -193,7 +193,7 @@ router.put(
       from,
       to,
       current,
-      description
+      description,
     };
 
     try {
@@ -244,8 +244,8 @@ router.put(
         .isEmpty(),
       check('from', 'From date is required')
         .not()
-        .isEmpty()
-    ]
+        .isEmpty(),
+    ],
   ],
   async (req, res) => {
     const err = validationResult(req);
@@ -261,7 +261,7 @@ router.put(
       from,
       to,
       current,
-      description
+      description,
     } = req.body;
 
     const newEdu = {
@@ -272,7 +272,7 @@ router.put(
       from,
       to,
       current,
-      description
+      description,
     };
 
     try {
@@ -318,7 +318,7 @@ router.get('/github/:username', async (req, res) => {
       )}&
       client_secret=${config.get('githubClientSecret')}`,
       method: 'get',
-      headers: { 'user-agent': 'node.js' }
+      headers: { 'user-agent': 'node.js' },
     };
     const githubResponse = await axios(options);
     const repoData = githubResponse.data;
@@ -327,7 +327,7 @@ router.get('/github/:username', async (req, res) => {
         name: repo.name,
         createdAt: repo.created_at,
         id: repo.node_id,
-        url: repo.html_url
+        url: repo.html_url,
       }))
     );
   } catch (error) {
