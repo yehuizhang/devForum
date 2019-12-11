@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { isCompositeType } from 'graphql';
+import { Link } from 'react-router-dom';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -51,16 +51,6 @@ const Register = () => {
       <form className="form" onSubmit={handleSubmit}>
         <div className="form-group">
           <input
-            type="text"
-            placeholder="Name"
-            name="name"
-            value={name}
-            onChange={handleFormChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <input
             type="email"
             placeholder="Email Address"
             name="email"
@@ -72,6 +62,16 @@ const Register = () => {
             This site uses Gravatar so if you want a profile image, use a
             Gravatar email
           </small>
+        </div>
+        <div className="form-group">
+          <input
+            type="text"
+            placeholder="Name"
+            name="name"
+            value={name}
+            onChange={handleFormChange}
+            required
+          />
         </div>
         <div className="form-group">
           <input
@@ -96,7 +96,7 @@ const Register = () => {
         <input type="submit" className="btn btn-primary" value="Register" />
       </form>
       <p className="my-1">
-        Already have an account? <a href="login.html">Sign In</a>
+        Already have an account? <Link to="/login">Sign In</Link>
       </p>
     </>
   );
