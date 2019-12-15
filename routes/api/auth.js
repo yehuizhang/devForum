@@ -14,7 +14,6 @@ const router = express.Router();
 // @access  Public
 router.get('/', auth, async (req, res) => {
   try {
-    console.log(User);
     const user = await User.findById(req.user.id).select('-password');
     if (!user) {
       return res

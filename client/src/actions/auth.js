@@ -12,7 +12,6 @@ import { setAlert } from './alert';
 import setAuthToken from '../utils/setAuthToken';
 
 export const loadUser = () => async dispatch => {
-  console.log('loadUser fired');
   if (localStorage.token) {
     setAuthToken(localStorage.token);
   }
