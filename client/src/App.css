@@ -287,6 +287,12 @@ button {
 .form .social-input i.fa-linkedin {
   color: #0077b5;
 }
+.form .social-input i.fa-weixin {
+  color: #7bb32e;
+}
+.form .social-input i.fa-weibo {
+  color: #e6162d;
+}
 
 .table th,
 .table td {
