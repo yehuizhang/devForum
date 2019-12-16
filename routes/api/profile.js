@@ -64,9 +64,7 @@ router.post(
 
     const { status, skills } = req.body;
     if (status) profileFields.status = status;
-    if (skills) {
-      profileFields.skills = skills.split(',').map(skill => skill.trim());
-    }
+    if (skills) profileFields.skills = skills;
 
     profileFields.social = {};
     profileFieldSocial.forEach(field => {

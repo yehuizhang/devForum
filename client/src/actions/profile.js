@@ -6,9 +6,12 @@ import { GET_PROFILE, PROFILE_ERROR } from './types';
 export const getCurrentProfile = () => async dispatch => {
   try {
     const res = await axios.get('/api/profile/me');
+    let profile = res.data;
+    profile = { ...profile, ...profile.social };
+    delete profile.social;
     dispatch({
       type: GET_PROFILE,
-      payload: res.data,
+      payload: profile,
     });
   } catch (error) {
     dispatch({
@@ -40,6 +43,7 @@ export const createProfile = (
       payload: res.data,
     });
     dispatch(setAlert(edit ? 'Profile Updated' : 'Profile Created', 'success'));
+    // window.scrollTo(0, 0);
 
     if (!edit) {
       history.push('/dashboard');
