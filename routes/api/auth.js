@@ -10,8 +10,8 @@ const User = require('../../models/User');
 const router = express.Router();
 
 // @route   GET api/auth
-// @desc    Test route
-// @access  Public
+// @desc    The user based on the token
+// @access  Private
 router.get('/', auth, async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select('-password');
